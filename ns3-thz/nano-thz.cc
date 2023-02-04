@@ -28,13 +28,11 @@ int main(int argc, char* argv[])
   RngSeedManager seed;
   seed.SetRun(seed_run);
 
-  uint8_t numNodes = 3;
+  uint8_t numNodes = 6;
   NodeContainer nodes;
   nodes.Create(numNodes);
 
   THzEnergyModelHelper energy;
-  energy.SetEnergyModelAttribute("THzEnergyModelInitialEnergy",StringValue("0.0"));
-  energy.SetEnergyModelAttribute("DataCallbackEnergy",DoubleValue(65));
   energy.Install(nodes);
 
   Ptr<THzChannel> thzChan = CreateObject<THzChannel>();    // noise floor -110 dBm
@@ -48,10 +46,10 @@ int main(int argc, char* argv[])
   else
       thzMac.Set("EnableRts",StringValue("0"));
 
-  Config::SetDefault("ns3::THzSpectrumValueFactory::NumSample", DoubleValue(9));   // num Subfreq
+  Config::SetDefault("ns3::THzSpectrumValueFactory::NumSample", DoubleValue(1));   // num Subfreq
   
   THzPhyNanoHelper thzPhy = THzPhyNanoHelper::Default ();
-  thzPhy.SetPhyAttribute("PulseDuration", TimeValue(FemtoSeconds(100)));       // Tp
+  thzPhy.SetPhyAttribute("PulseDuration", TimeValue(FemtoSeconds(50)));       // Tp
   thzPhy.SetPhyAttribute("Beta", DoubleValue(100));     // beta = Ts/Tp
   thzPhy.SetPhyAttribute("TxPower", DoubleValue(-20));  // dBm
 
@@ -125,7 +123,7 @@ int main(int argc, char* argv[])
     }
 
   TrafficGeneratorHelper Traffic;
-  Traffic.SetAttribute("Mean", DoubleValue(300));       // Tb time truyen giua 2 goi tin
+  Traffic.SetAttribute("Mean", DoubleValue(300));       // avg time truyen giua 2 goi tin
   Traffic.SetAttribute("PacketSize",UintegerValue(packetLength));
   ApplicationContainer Apps = Traffic.Install(nodes);
   Apps.Start(MicroSeconds(200));
